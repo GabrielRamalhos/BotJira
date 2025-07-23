@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assistente de Criação de Ticket Jira</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 520px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      padding: 32px;
+    }
+    h1 {
+      text-align: center;
+      color: #2d3a4a;
+      margin-bottom: 24px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+    }
+    select, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+    textarea {
+      min-height: 100px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0052cc;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:disabled {
+      background: #b3c6e0;
+      cursor: not-allowed;
+    }
+    button:hover:enabled {
+      background: #003d99;
+    }
+    .result, .error {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 0.95rem;
+    }
+    .result {
+      background: #e6ffed;
+      color: #1a7f37;
+      border: 1px solid #b7eb8f;
+    }
+    .error {
+      background: #ffeaea;
+      color: #c00;
+      border: 1px solid #f5c6cb;
+    }
+    .loading {
+      text-align: center;
+      color: #888;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Criar Ticket no Jira</h1>
+    <form id="ticketForm">
+      <label for="issuetype">Tipo de Ticket:</label>
+      <select id="issuetype" name="issuetype" required>
+        <option value="">Selecione o tipo de ticket...</option>
+        <option value="10024">Tarefa</option>
+        <option value="10025">Subtarefa</option>
+        <option value="10013">História</option>
+        <option value="10026">Bug</option>
+        <option value="10000">Epic</option>
+      </select>
+
+      <label for="priority">Prioridade:</label>
+      <select id="priority" name="priority" required>
+        <option value="">Selecione a prioridade...</option>
+        <option value="1">Muito Alto</option>
+        <option value="2">Alto</option>
+        <option value="3">Médio</option>
+        <option value="4">Baixo</option>
+        <option value="5">Muito Baixo</option>
+        <option value="10000">War Room</option>
+      </select>
+
+      <label for="text">Descreva o problema ou solicitação:</label>
+      <textarea id="text" name="text" placeholder="Digite aqui..." disabled required></textarea>
+
+      <button type="submit" id="enviarBtn" disabled>Enviar</button>
+    </form>
+
+    <div id="feedback"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('ticketForm');
+    const feedback = document.getElementById('feedback');
+    const issuetypeSelect = document.getElementById('issuetype');
+    const textarea = document.getElementById('text');
+    const enviarBtn = document.getElementById('enviarBtn');
+    const prioritySelect = document.getElementById('priority');
+
+    issuetypeSelect.addEventListener('change', () => {
+      if (issuetypeSelect.value) {
+        textarea.disabled = false;
+        enviarBtn.disabled = false;
+        prioritySelect.disabled = false;
+      } else {
+        textarea.disabled = true;
+        enviarBtn.disabled = true;
+        textarea.value = '';
+        prioritySelect.disabled = true;
+        prioritySelect.value = '';
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      feedback.innerHTML = '<div class="loading">Processando, aguarde...</div>';
+      const text = textarea.value;
+      const issuetypeId = issuetypeSelect.value;
+      const priorityId = prioritySelect.value;
+
+      try {
+        const res = await fetch('/create-ticket', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            text,
+            issuetype: issuetypeId,
+            priority: priorityId // Envia o ID da prioridade
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          feedback.innerHTML = `<div class="result">✅ ${data.message}<br>Ticket criado: <b>${data.jiraResponse.key}</b></div>`;
+          form.reset();
+          textarea.disabled = true;
+          enviarBtn.disabled = true;
+          prioritySelect.disabled = true;
+        } else {
+          feedback.innerHTML = `<div class="error">❌ ${data.error || JSON.stringify(data)}</div>`;
+        }
+      } catch (err) {
+        feedback.innerHTML = `<div class="error">❌ Erro ao conectar com o servidor.</div>`;
+      }
+    });
+  </script>
+</body>
+</html>
+    });
+  </script>
+</body>
+</html>

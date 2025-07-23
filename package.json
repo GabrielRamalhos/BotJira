@@ -1,0 +1,21 @@
+{
+  "name": "bot-jira-backend",
+  "version": "1.0.0",
+  "description": "Backend simples para criação de tickets no Jira usando Node.js, Express e OpenAI.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": ["jira", "openai", "express", "backend"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+} 
