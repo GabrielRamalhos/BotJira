@@ -49,7 +49,7 @@ Exemplo de saída esperada:
   "summary": "Falha no botão de salvar na tela de edição mobile",
   "issuetype": "Bug",
   "priority": "High",
-  "description": "\\n\\nDescrição:\\n🎯 Objetivo\\nGarantir que o botão de salvar funcione corretamente na tela de edição do aplicativo mobile.\\n\\n✅ Critérios de aceitação\\n- Dados enviados com sucesso\\n- Mensagem de confirmação exibida\\n- Compatibilidade com Android e iOS"
+  "description": "\\n🎯 Objetivo\\nGarantir que o botão de salvar funcione corretamente na tela de edição do aplicativo mobile.\\n\\n✅ Critérios de aceitação\\n- Dados enviados com sucesso\\n- Mensagem de confirmação exibida\\n- Compatibilidade com Android e iOS"
 }
 
 Responda APENAS com o JSON, sem explicações adicionais.
